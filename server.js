@@ -34,7 +34,7 @@ function reloadJwtSecret() {
         `reloadJwtSecret: loaded from ENV\n`
       );
     } catch {
-      /* ignore */
+      // ignore
     }
     return JWT_SECRET;
   }
@@ -51,7 +51,7 @@ function reloadJwtSecret() {
         `reloadJwtSecret: secret present=${!!JWT_SECRET}\n`
       );
     } catch {
-      /* ignore */
+      // ignore
     }
   } catch (e) {
     try {
@@ -60,7 +60,7 @@ function reloadJwtSecret() {
         `reloadJwtSecret: error ${e && e.message}\n`
       );
     } catch {
-      /* ignore */
+      // ignore
     }
     JWT_SECRET = "dev-jwt-secret";
   }
