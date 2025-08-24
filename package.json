@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "jest",
-    "start": "node server.js"
+    "start": "node server.js",
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "",
@@ -19,6 +20,8 @@
     "morgan": "^1.10.1"
   },
   "devDependencies": {
+    "eslint": "^9.34.0",
+    "eslint-plugin-jest": "^29.0.1",
     "jest": "^30.0.5",
     "supertest": "^7.1.4"
   }

@@ -28,7 +28,7 @@ class MCPClient {
     try {
       const content = fs.readFileSync("C:/central-mcp-config.json", "utf8");
       return JSON.parse(content);
-    } catch (e) {
+    } catch {
       return null;
     }
   }
@@ -88,7 +88,7 @@ class MCPClient {
       )
         return cfg.secrets[name];
       if (Object.prototype.hasOwnProperty.call(cfg, name)) return cfg[name];
-    } catch (e) {
+    } catch {
       // try workspace file
       try {
         const content = fs.readFileSync(
@@ -107,7 +107,7 @@ class MCPClient {
         )
           return cfg.secrets[name];
         if (Object.prototype.hasOwnProperty.call(cfg, name)) return cfg[name];
-      } catch (e) {
+      } catch {
         // ignore
       }
     }
@@ -125,7 +125,7 @@ class MCPClient {
         );
         if (resp && resp.data && resp.data.value) return resp.data.value;
       }
-    } catch (e) {
+    } catch {
       // fallthrough to token exchange
     }
 
@@ -145,7 +145,7 @@ class MCPClient {
           if (resp2 && resp2.data && resp2.data.value) return resp2.data.value;
         }
       }
-    } catch (e) {
+    } catch {
       // ignore
     }
 

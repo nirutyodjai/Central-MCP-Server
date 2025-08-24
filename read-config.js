@@ -8,7 +8,7 @@ const { URL } = require("url");
 function fileExists(p) {
   try {
     return fs.existsSync(p);
-  } catch (e) {
+  } catch {
     return false;
   }
 }
@@ -39,8 +39,10 @@ function loadConfig() {
         if (!cfg.centralMcpJwtSecret && parsed.centralMcpJwtSecret)
           cfg.centralMcpJwtSecret = parsed.centralMcpJwtSecret;
         if (!cfg.secrets && parsed.secrets) cfg.secrets = parsed.secrets;
-      } catch (e) {
-        console.error("failed to read/parse", c, e && e.message);
+      } catch {
+        console.error("Error reading or parsing the configuration file (central-mcp-config.json).");
+        console.error("Please ensure the file exists in the same directory and is valid JSON.");
+        return null;
       }
       break;
     }

@@ -23,48 +23,6 @@ const PID_FILE = path.join(__dirname, "server.pid");
 // Use a reloadable variable so the server can recover if the config was fixed while running.
 let SERVER_TOKEN = process.env.CENTRAL_MCP_SERVER_TOKEN || null;
 
-function reloadServerToken() {
-  if (process.env.CENTRAL_MCP_SERVER_TOKEN) {
-    SERVER_TOKEN = process.env.CENTRAL_MCP_SERVER_TOKEN;
-    try {
-      fs.appendFileSync(
-        path.join(__dirname, "auth-debug.log"),
-        `reloadServerToken: loaded from ENV\n`
-      );
-    } catch (e) {}
-    return SERVER_TOKEN;
-  }
-  try {
-    const workspaceCfg = path.join(__dirname, "central-mcp-config.json");
-    const cfgPathLocal = fs.existsSync("C:/central-mcp-config.json")
-      ? "C:/central-mcp-config.json"
-      : workspaceCfg;
-    try {
-      fs.appendFileSync(
-        path.join(__dirname, "auth-debug.log"),
-        `reloadServerToken: checking config path ${cfgPathLocal}\n`
-      );
-    } catch (e) {}
-    const cfg = JSON.parse(fs.readFileSync(cfgPathLocal, "utf8"));
-    SERVER_TOKEN = cfg.centralMcpServerToken || null;
-    try {
-      fs.appendFileSync(
-        path.join(__dirname, "auth-debug.log"),
-        `reloadServerToken: token present=${!!SERVER_TOKEN}\n`
-      );
-    } catch (e) {}
-  } catch (e) {
-    try {
-      fs.appendFileSync(
-        path.join(__dirname, "auth-debug.log"),
-        `reloadServerToken: error ${e && e.message}\n`
-      );
-    } catch (e) {}
-    SERVER_TOKEN = null;
-  }
-  return SERVER_TOKEN;
-}
-
 // JWT secret for signing short-lived access tokens (reloadable)
 let JWT_SECRET = process.env.CENTRAL_MCP_JWT_SECRET || null;
 function reloadJwtSecret() {
@@ -75,7 +33,9 @@ function reloadJwtSecret() {
         path.join(__dirname, "auth-debug.log"),
         `reloadJwtSecret: loaded from ENV\n`
       );
-    } catch (e) {}
+    } catch {
+      /* ignore */
+    }
     return JWT_SECRET;
   }
   try {
@@ -90,14 +50,18 @@ function reloadJwtSecret() {
         path.join(__dirname, "auth-debug.log"),
         `reloadJwtSecret: secret present=${!!JWT_SECRET}\n`
       );
-    } catch (e) {}
+    } catch {
+      /* ignore */
+    }
   } catch (e) {
     try {
       fs.appendFileSync(
         path.join(__dirname, "auth-debug.log"),
         `reloadJwtSecret: error ${e && e.message}\n`
       );
-    } catch (e) {}
+    } catch {
+      /* ignore */
+    }
     JWT_SECRET = "dev-jwt-secret";
   }
   return JWT_SECRET;
@@ -152,7 +116,7 @@ function requireAuth(req, res, next) {
       !!cfg.centralMcpServerToken
     );
     cfgToken = cfg.centralMcpServerToken || cfgToken;
-  } catch (e) {
+  } catch {
     // ignore and fall back to env
   }
   if (!cfgToken)
@@ -167,7 +131,7 @@ function requireAuth(req, res, next) {
     const payload = jwt.verify(token, JWT_SECRET || "dev-jwt-secret");
     req.jwt = payload;
     return next();
-  } catch (e) {
+  } catch {
     return res.status(403).json({ error: "Forbidden" });
   }
 }
@@ -184,7 +148,7 @@ app.post("/token", (req, res) => {
       : workspaceCfg;
     const cfg = JSON.parse(fs.readFileSync(cfgPathLocal, "utf8"));
     currentToken = cfg.centralMcpServerToken || currentToken;
-  } catch (e) {
+  } catch {
     // ignore
   }
   const auth = req.headers["authorization"];
@@ -228,7 +192,7 @@ app.get("/health", (req, res) => {
             : workspaceCfg;
           const cfg = JSON.parse(fs.readFileSync(cfgPathLocal, "utf8"));
           return cfg.centralMcpServerToken;
-        } catch (e) {
+        } catch {
           return null;
         }
       })()
@@ -302,11 +266,11 @@ app.get("/status", (req, res) => {
     };
     res.json(info);
   } catch (e) {
-    res.status(500).json({ error: "failed", details: e && e.message });
+    res.status(500).json({ error: "failed", details: e.message });
   }
 });
 
-const server = app.listen(port, () => {
+app.listen(port, () => {
   console.log(`Central MCP Server listening at http://localhost:${port}`);
   try {
     // show diagnostic info at startup
@@ -347,7 +311,9 @@ const server = app.listen(port, () => {
   function cleanupAndExit(code) {
     try {
       if (fs.existsSync(PID_FILE)) fs.unlinkSync(PID_FILE);
-    } catch (e) {}
+    } catch {
+      // ignore
+    }
     console.log("shutting down", code || 0);
     process.exit(code || 0);
   }

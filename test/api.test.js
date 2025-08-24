@@ -11,12 +11,16 @@ const authToken = config.centralMcpServerToken;
 describe("API Endpoints", () => {
   let server;
 
-  beforeAll((done) => {
-    server = app.listen(5051, done); // Use a different port for testing
+  beforeAll(() => {
+    server = app.listen(5051); // Use a different port for testing
   });
 
-  afterAll((done) => {
-    server.close(done);
+  afterAll(() => {
+    return new Promise((resolve) => {
+      server.close(() => {
+        resolve();
+      });
+    });
   });
 
   // Reset context before each test in this block
