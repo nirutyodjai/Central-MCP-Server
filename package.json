@@ -1,15 +1,17 @@
 {
   "name": "central-mcp-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "Central MCP Server for managing multiple MCP servers with load balancing, service discovery, and monitoring",
   "main": "server.js",
   "scripts": {
     "test": "jest",
     "start": "node server.js",
-    "lint": "eslint ."
+    "dev": "nodemon server.js",
+    "lint": "eslint .",
+    "format": "prettier --write ."
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["mcp", "server", "load-balancer", "service-discovery", "monitoring", "microservices"],
+  "author": "Central MCP Server Team",
   "license": "ISC",
   "dependencies": {
     "axios": "^1.11.0",
@@ -17,7 +19,8 @@
     "express": "^5.1.0",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
-    "morgan": "^1.10.1"
+    "morgan": "^1.10.1",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "eslint": "^9.34.0",

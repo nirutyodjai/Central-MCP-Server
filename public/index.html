@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Central MCP Server Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #718096;
+            font-size: 1.1rem;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+            padding: 8px 16px;
+            background: #48bb78;
+            color: white;
+            border-radius: 25px;
+            font-weight: 500;
+        }
+
+        .status-indicator.offline {
+            background: #f56565;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .card-icon.servers { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .card-icon.metrics { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .card-icon.health { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+        .card-icon.discovery { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin: 15px 0;
+        }
+
+        .metric-label {
+            color: #718096;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .server-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .server-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .server-item:last-child {
+            border-bottom: none;
+        }
+
+        .server-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .server-name {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .server-url {
+            font-size: 0.85rem;
+            color: #718096;
+            font-family: 'Courier New', monospace;
+        }
+
+        .server-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .server-status.healthy {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .server-status.unhealthy {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        .server-status.unknown {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .alert-warning {
+            background: #fef5e7;
+            color: #744210;
+            border-left: 4px solid #ed8936;
+        }
+
+        .alert-error {
+            background: #fed7d7;
+            color: #742a2a;
+            border-left: 4px solid #f56565;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .refresh-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-server"></i> Central MCP Server Dashboard</h1>
+            <p>Monitor and manage your MCP server infrastructure</p>
+            <div class="status-indicator" id="serverStatus">
+                <i class="fas fa-circle"></i>
+                <span>Checking status...</span>
+            </div>
+        </div>
+
+        <div id="alerts"></div>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon servers">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <div class="card-title">Registered Servers</div>
+                </div>
+                <div class="metric-value" id="serverCount">-</div>
+                <div class="metric-label">Total MCP Servers</div>
+                <div class="actions">
+                    <button class="btn btn-primary" onclick="refreshServers()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon health">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <div class="card-title">Health Status</div>
+                </div>
+                <div class="metric-value" id="healthyCount">-</div>
+                <div class="metric-label">Healthy Servers</div>
+                <div class="actions">
+                    <button class="btn btn-primary" onclick="runHealthCheck()">
+                        <i class="fas fa-stethoscope"></i> Health Check
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon metrics">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="card-title">Request Metrics</div>
+                </div>
+                <div class="metric-value" id="requestCount">-</div>
+                <div class="metric-label">Total Requests</div>
+                <div class="actions">
+                    <a href="/metrics" class="btn btn-secondary" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> View Details
+                    </a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon discovery">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="card-title">Service Discovery</div>
+                </div>
+                <div class="metric-value" id="capabilityCount">-</div>
+                <div class="metric-label">Available Capabilities</div>
+                <div class="actions">
+                    <button class="btn btn-primary" onclick="viewCapabilities()">
+                        <i class="fas fa-list"></i> View All
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon servers">
+                    <i class="fas fa-list"></i>
+                </div>
+                <div class="card-title">Server List</div>
+            </div>
+            <div class="server-list" id="serverList">
+                <div style="text-align: center; padding: 40px; color: #718096;">
+                    <div class="loading"></div>
+                    <p style="margin-top: 15px;">Loading servers...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="refresh-btn" onclick="refreshDashboard()" title="Refresh Dashboard">
+        <i class="fas fa-sync-alt"></i>
+    </button>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
