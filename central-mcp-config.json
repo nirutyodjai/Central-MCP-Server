@@ -1,0 +1,9 @@
+{
+    "centralMcpJwtSecret": "91a1aa9c42f340fe99dc1d0ba04b1fdb",
+    "centralMcpServerUrl": "http://localhost:5050",
+    "secrets": {
+        "mySecretKey": "supersecret-value",
+        "dbPassword": "example-db-password"
+    },
+    "centralMcpServerToken": "dev-token-123"
+}
