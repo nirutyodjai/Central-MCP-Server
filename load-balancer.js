@@ -24,8 +24,6 @@ class LoadBalancer extends EventEmitter {
     this.healthCheckInterval = 30000; // 30 seconds
     this.healthCheckTimeout = 5000; // 5 seconds
     this.healthCheckTimer = null;
-    
-    this.startHealthChecks();
   }
 
   /**

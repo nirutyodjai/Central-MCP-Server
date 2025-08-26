@@ -54,6 +54,21 @@ class MCPRegistry {
     return this.servers.get(serverId);
   }
 
+  // Update server status manually (used for testing)
+  updateServerStatus(serverId, status) {
+    const server = this.servers.get(serverId);
+    if (server) {
+      server.status = status;
+      logger.info('Server status updated manually', { 
+        serverId, 
+        name: server.name, 
+        newStatus: status 
+      });
+      return true;
+    }
+    return false;
+  }
+
   // Get healthy servers only
   getHealthyServers() {
     return Array.from(this.servers.values()).filter(server => server.status === 'healthy');

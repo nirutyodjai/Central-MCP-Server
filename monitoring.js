@@ -57,9 +57,6 @@ class MonitoringSystem extends EventEmitter {
     
     // Alert state tracking
     this.activeAlerts = new Map();
-    
-    // Start system monitoring
-    this.startSystemMonitoring();
   }
 
   /**

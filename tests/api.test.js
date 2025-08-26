@@ -24,7 +24,7 @@ describe('API Integration Tests', () => {
     
     // Initialize components
     registry = new MCPRegistry();
-    loadBalancer = new LoadBalancer();
+    loadBalancer = new LoadBalancer(registry);
     monitoring = new MonitoringSystem();
     serviceDiscovery = new ServiceDiscovery(registry);
     
@@ -38,7 +38,7 @@ describe('API Integration Tests', () => {
       const start = Date.now();
       res.on('finish', () => {
         const duration = Date.now() - start;
-        monitoring.recordRequest(req.method, req.path, res.statusCode, duration);
+        monitoring.trackRequest(req, res, duration);
       });
       next();
     });
@@ -224,9 +224,20 @@ describe('API Integration Tests', () => {
   });
 
   beforeEach(() => {
+    // Stop existing timers before creating new instances
+    if (registry && registry.stopHealthCheck) {
+      registry.stopHealthCheck();
+    }
+    if (loadBalancer && loadBalancer.stopHealthChecks) {
+      loadBalancer.stopHealthChecks();
+    }
+    if (monitoring && monitoring.stopSystemMonitoring) {
+      monitoring.stopSystemMonitoring();
+    }
+    
     // Clear registry and reset components
     registry = new MCPRegistry();
-    loadBalancer = new LoadBalancer();
+    loadBalancer = new LoadBalancer(registry);
     monitoring = new MonitoringSystem();
     serviceDiscovery = new ServiceDiscovery(registry);
   });

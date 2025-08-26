@@ -1,0 +1,8 @@
+{
+  "port": 5051,
+  "jwtSecret": "test-jwt-secret",
+  "serverToken": "test-server-token",
+  "logLevel": "error",
+  "healthCheckInterval": 5000,
+  "metricsRetentionHours": 1
+}
