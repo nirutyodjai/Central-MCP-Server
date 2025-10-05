@@ -1,0 +1,1 @@
+{"version":3,"file":"GitIntegration.d.ts","sourceRoot":"","sources":["../../src/integrations/GitIntegration.ts"],"names":[],"mappings":"AACA,qBAAa,UAAU;IACT,OAAO,CAAC,QAAQ;gBAAR,QAAQ,GAAE,MAAY;IAEpC,IAAI;IAKJ,gBAAgB,CAAC,QAAQ,EAAE,MAAM;IAIjC,OAAO;CAGd"}

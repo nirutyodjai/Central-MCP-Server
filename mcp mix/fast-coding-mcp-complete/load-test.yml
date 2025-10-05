@@ -1,0 +1,45 @@
+config:
+  target: 'http://localhost:4523'
+  phases:
+    - duration: 60
+      arrivalRate: 10
+      name: 'Warm up'
+    - duration: 120
+      arrivalRate: 50
+      rampTo: 100
+      name: 'Ramp up load'
+    - duration: 300
+      arrivalRate: 100
+      name: 'Sustained load'
+    - duration: 60
+      arrivalRate: 10
+      rampTo: 0
+      name: 'Ramp down'
+
+scenarios:
+  - name: 'MCP Platform Load Test'
+    flow:
+      - get:
+          url: '/api/health'
+          expect:
+            - statusCode: 200
+      - post:
+          url: '/api/scrape-web'
+          json:
+            url: 'https://example.com'
+            options:
+              includeImages: false
+              includeLinks: true
+          expect:
+            - statusCode: [200, 201]
+      - get:
+          url: '/api/export-data'
+          expect:
+            - statusCode: 200
+      - post:
+          url: '/api/analyze-code'
+          json:
+            code: 'console.log("Hello World");'
+            language: 'javascript'
+          expect:
+            - statusCode: 200

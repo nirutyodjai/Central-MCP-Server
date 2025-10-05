@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Ultimate MCP Platform Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #4ade80;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background: #4ade80;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .card-icon {
+            font-size: 1.5rem;
+        }
+
+        .trading-card {
+            border-left: 5px solid #f59e0b;
+        }
+
+        .crypto-card {
+            border-left: 5px solid #8b5cf6;
+        }
+
+        .ai-card {
+            border-left: 5px solid #10b981;
+        }
+
+        .filesystem-card {
+            border-left: 5px solid #3b82f6;
+        }
+
+        .mcp-card {
+            border-left: 5px solid #ef4444;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: 0.25rem;
+        }
+
+        .recommendations-list {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .recommendation-item {
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .recommendation-action {
+            font-weight: bold;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+
+        .buy-action {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .sell-action {
+            background: #fecaca;
+            color: #991b1b;
+        }
+
+        .hold-action {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .confidence-bar {
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 0.25rem;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #fbbf24, #10b981);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .market-trend {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .trend-bullish {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .trend-bearish {
+            background: #fecaca;
+            color: #991b1b;
+        }
+
+        .trend-sideways {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .mcp-servers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .mcp-server-card {
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .server-name {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .server-status {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .status-running {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .server-features {
+            margin-top: 0.5rem;
+        }
+
+        .feature-tag {
+            display: inline-block;
+            padding: 0.125rem 0.5rem;
+            background: #e5e7eb;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin: 0.125rem;
+        }
+
+        .last-update {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-top: 0.5rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #6b7280;
+        }
+
+        .error {
+            background: #fecaca;
+            color: #991b1b;
+            margin: 1rem 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1rem;
+        }
+
+        /* Filter controls */
+        .filter-controls {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-label {
+            font-size: 0.875rem;
+            color: white;
+            font-weight: 500;
+        }
+
+        .filter-select {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            padding: 0.5rem;
+            font-size: 0.875rem;
+            color: #333;
+        }
+
+        .filter-button {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .filter-button:hover {
+            background: #059669;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.875rem;
+        }
+
+        /* Chat AI Widget */
+        .chat-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: bold;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            max-height: 350px;
+        }
+
+        .chat-message {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            border-radius: 12px;
+            max-width: 80%;
+        }
+
+        .chat-message.user {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .chat-message.ai {
+            background: #f3f4f6;
+            color: #1f2937;
+            border: 1px solid #e5e7eb;
+        }
+
+        .chat-input-container {
+            padding: 1rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            resize: none;
+            min-height: 40px;
+            max-height: 100px;
+        }
+
+        .chat-send {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .chat-send:hover {
+            opacity: 0.9;
+        }
+
+        .chat-send:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .chat-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            z-index: 1001;
+            display: none;
+        }
+
+        .chat-toggle.visible {
+            display: block;
+        }
+
+        .chat-typing {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .typing-dots {
+            display: inline-flex;
+            gap: 2px;
+        }
+
+        .typing-dot {
+            width: 4px;
+            height: 4px;
+            background: #6b7280;
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: scale(1); opacity: 0.5; }
+            30% { transform: scale(1.2); opacity: 1; }
+        }
+
+        .ai-tools {
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            padding: 0.75rem;
+        }
+
+        .ai-tools-header {
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .ai-tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+            gap: 0.25rem;
+        }
+
+        .ai-tool {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 0.5rem 0.25rem;
+            text-align: center;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #475569;
+            transition: all 0.2s ease;
+        }
+
+        .ai-tool:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <div class="header">
+        <div class="logo">
+            🚀 Ultimate MCP Platform
+            <div class="status-indicator">
+                <div class="status-dot"></div>
+                <span>Live</span>
+            </div>
+        </div>
+        <div>
+            <button class="refresh-button" onclick="refreshAllData()">🔄 Refresh Data</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1 style="color: white; text-align: center; margin-bottom: 2rem; font-size: 2.5rem;">
+            🌟 Ultimate MCP Web Platform Dashboard
+        </h1>
+
+        <div class="dashboard-grid" id="dashboardGrid">
+            <div class="loading">กำลังโหลดข้อมูล...</div>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="filter-controls" id="filterControls" style="display: none;">
+            <div class="filter-group">
+                <div class="filter-label">Data Type</div>
+                <select class="filter-select" id="dataTypeFilter">
+                    <option value="all">All Data</option>
+                    <option value="trading">Trading Data</option>
+                    <option value="insights">Investment Insights</option>
+                    <option value="system">System Status</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <div class="filter-label">Time Range</div>
+                <select class="filter-select" id="timeRangeFilter">
+                    <option value="1h">Last Hour</option>
+                    <option value="24h">Last 24 Hours</option>
+                    <option value="7d">Last 7 Days</option>
+                    <option value="30d">Last 30 Days</option>
+                </select>
+            </div>
+            <button class="filter-button" onclick="applyFilters()">Apply Filters</button>
+        </div>
+
+        <!-- Analytics Section -->
+        <div class="analytics-section" id="analyticsSection" style="display: none;">
+            <h2 style="color: white; margin-bottom: 1rem;">📊 Advanced Analytics</h2>
+            <div class="analytics-grid" id="analyticsGrid">
+                <div class="metric-card">
+                    <div class="metric-value" id="totalTrades">0</div>
+                    <div class="metric-label">Total Trades</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="avgReturn">0%</div>
+                    <div class="metric-label">Average Return</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="winRate">0%</div>
+                    <div class="metric-label">Win Rate</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="portfolioValue">$0</div>
+                    <div class="metric-label">Portfolio Value</div>
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="tradingChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons" id="actionButtons" style="display: none;">
+            <button class="action-button primary" onclick="runTradingAnalysis()">🔍 Analyze Portfolio</button>
+            <button class="action-button secondary" onclick="generateReport()">📋 Generate Report</button>
+            <button class="action-button" onclick="exportData()">💾 Export Data</button>
+            <button class="action-button danger" onclick="clearCache()">🗑️ Clear Cache</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>🚀 Powered by Ultimate MCP Platform | 🤖 AI-Enhanced | 📊 Real-time Analytics</p>
+        <p>© 2024 Central MCP Server - The Most Advanced MCP Platform</p>
+    </div>
+
+    <!-- Chat AI Toggle Button -->
+    <button class="chat-toggle" onclick="toggleChat()" title="เปิดแชท AI">🤖</button>
+
+    <!-- Chat AI Widget -->
+    <div class="chat-widget" id="chatWidget" style="display: none;">
+        <div class="chat-header">
+            <span>🧠</span>
+            <div>
+                <div>AI Trading Assistant</div>
+                <small>พร้อมช่วยเหลือการลงทุน</small>
+            </div>
+        </div>
+
+        <div class="chat-messages" id="chatMessages"></div>
+
+        <div class="chat-typing" id="chatTyping">
+            <span>AI กำลังคิด...</span>
+            <div class="typing-dots">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            </div>
+        </div>
+
+        <div class="ai-tools">
+            <div class="ai-tools-header">🛠️ Trading Tools</div>
+            <div class="ai-tools-grid">
+                <div class="ai-tool" onclick="useAITool('analyze_portfolio')">📊 วิเคราะห์พอร์ต</div>
+                <div class="ai-tool" onclick="useAITool('market_data')">📈 ข้อมูลตลาด</div>
+                <div class="ai-tool" onclick="useAITool('optimize_portfolio')">⚖️ เพิ่มประสิทธิภาพ</div>
+                <div class="ai-tool" onclick="useAITool('risk_assessment')">⚠️ ประเมินความเสี่ยง</div>
+                <div class="ai-tool" onclick="useAITool('trading_signals')">🚨 สัญญาณเทรด</div>
+                <div class="ai-tool" onclick="useAITool('generate_report')">📋 สร้างรายงาน</div>
+            </div>
+        </div>
+
+        <div class="chat-input-container">
+            <textarea class="chat-input" id="chatInput" placeholder="ถาม AI เกี่ยวกับการลงทุน..." rows="1"></textarea>
+            <button class="chat-send" onclick="sendChatMessage()">ส่ง</button>
+        </div>
+    </div>
+
+    <script>
+        // Chat AI Variables
+        let chatVisible = false;
+        let currentTool = null;
+
+        // Trading AI Tools
+        const aiTools = {
+            analyze_portfolio: {
+                name: 'วิเคราะห์พอร์ตการลงทุน',
+                description: 'วิเคราะห์ประสิทธิภาพและให้คำแนะนำปรับพอร์ต',
+                action: 'analyze-trading'
+            },
+            market_data: {
+                name: 'ข้อมูลตลาดล่าสุด',
+                description: 'ดึงข้อมูลราคาและแนวโน้มตลาดแบบเรียลไทม์',
+                action: 'market-data'
+            },
+            optimize_portfolio: {
+                name: 'เพิ่มประสิทธิภาพพอร์ต',
+                description: 'คำนวณการจัดสรรสินทรัพย์ที่เหมาะสม',
+                action: 'optimize-portfolio'
+            },
+            risk_assessment: {
+                name: 'ประเมินความเสี่ยง',
+                description: 'วิเคราะห์ระดับความเสี่ยงและคำแนะนำการจัดการ',
+                action: 'assess-risk'
+            },
+            trading_signals: {
+                name: 'สัญญาณการเทรด',
+                description: 'รับคำแนะนำซื้อ/ขาย/ถือตามสัญญาณทางเทคนิค',
+                action: 'investment-insights'
+            },
+            generate_report: {
+                name: 'สร้างรายงาน',
+                description: 'สร้างรายงานการลงทุนแบบครอบคลุม',
+                action: 'generate-report'
+            }
+        };
+
+        // Initialize Chat AI
+        function initializeChatAI() {
+            const chatInput = document.getElementById('chatInput');
+            chatInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendChatMessage();
+                }
+            });
+
+            // Auto-resize textarea
+            chatInput.addEventListener('input', () => {
+                chatInput.style.height = 'auto';
+                chatInput.style.height = chatInput.scrollHeight + 'px';
+            });
+
+            // Show welcome message
+            setTimeout(() => {
+                addChatMessage('ai', '🤖 สวัสดีครับ! ผมคือ AI Trading Assistant พร้อมช่วยเหลือคุณในการลงทุน\n\nเลือกเครื่องมือด้านบนหรือถามผมได้เลยครับ! 🚀');
+            }, 1000);
+        }
+
+        // Toggle chat visibility
+        function toggleChat() {
+            const widget = document.getElementById('chatWidget');
+            const toggle = document.querySelector('.chat-toggle');
+
+            chatVisible = !chatVisible;
+
+            if (chatVisible) {
+                widget.style.display = 'flex';
+                toggle.classList.remove('visible');
+                document.getElementById('chatInput').focus();
+            } else {
+                widget.style.display = 'none';
+                toggle.classList.add('visible');
+            }
+        }
+
+        // Use AI Tool
+        function useAITool(toolKey) {
+            const tool = aiTools[toolKey];
+            if (!tool) return;
+
+            currentTool = toolKey;
+            addChatMessage('user', `🛠️ ใช้เครื่องมือ: ${tool.name}`);
+            showTyping();
+
+            setTimeout(async () => {
+                hideTyping();
+                await executeAITool(tool);
+            }, 1500);
+        }
+
+        // Execute AI Tool
+        async function executeAITool(tool) {
+            try {
+                let endpoint = '/api/';
+                let requestBody = {};
+
+                switch (tool.action) {
+                    case 'analyze-trading':
+                        endpoint += 'analyze-trading';
+                        requestBody = {
+                            portfolio: 'current',
+                            timeframe: '30d'
+                        };
+                        break;
+
+                    case 'market-data':
+                        endpoint += 'market-data';
+                        break;
+
+                    case 'optimize-portfolio':
+                        endpoint += 'optimize-portfolio';
+                        requestBody = {
+                            portfolio: { stocks: 0.6, crypto: 0.3, cash: 0.1 },
+                            strategy: 'balanced'
+                        };
+                        break;
+
+                    case 'assess-risk':
+                        endpoint += 'assess-risk';
+                        requestBody = {
+                            portfolio: 'current',
+                            timeframe: '1y'
+                        };
+                        break;
+
+                    case 'investment-insights':
+                        endpoint += 'investment-insights';
+                        break;
+
+                    case 'generate-report':
+                        endpoint += 'generate-report';
+                        requestBody = {
+                            type: 'comprehensive',
+                            format: 'summary'
+                        };
+                        break;
+                }
+
+                const response = await fetch(endpoint, {
+                    method: tool.action.includes('market-data') ? 'GET' : 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: Object.keys(requestBody).length > 0 ? JSON.stringify(requestBody) : undefined
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    formatToolResponse(tool, result.data);
+                } else {
+                    addChatMessage('ai', `❌ ไม่สามารถใช้เครื่องมือได้: ${result.error}`);
+                }
+
+            } catch (error) {
+                addChatMessage('ai', `❌ เกิดข้อผิดพลาดในการใช้เครื่องมือ: ${error.message}`);
+            }
+        }
+
+        // Format tool response for chat
+        function formatToolResponse(tool, data) {
+            let message = '';
+
+            switch (tool.action) {
+                case 'analyze-trading':
+                    message = `📊 ผลการวิเคราะห์พอร์ต:\n\n💹 มูลค่าพอร์ต: $${data.portfolioValue?.toLocaleString() || 'ไม่ระบุ'}\n📈 ผลตอบแทนเฉลี่ย: ${data.averageReturn || 0}%\n🎯 อัตราการชนะ: ${data.winRate || 0}%\n🔥 จำนวนการเทรดทั้งหมด: ${data.totalTrades || 0}\n\n💡 คำแนะนำ: ${data.recommendations?.join(', ') || 'ไม่มีการแนะนำเฉพาะ'}`;
+                    break;
+
+                case 'market-data':
+                    message = `📈 ข้อมูลตลาดล่าสุด:\n\n🏢 หุ้นไทย: ${data.stocks?.length || 0} ตัว\n₿ Cryptocurrency: ${data.crypto?.length || 0} สกุล\n💱 คู่เงิน: ${data.forex?.length || 0} คู่\n\n📊 แนวโน้ม: ข้อมูลอัปเดตล่าสุด ${new Date(data.lastUpdated).toLocaleTimeString('th-TH')}`;
+                    break;
+
+                case 'optimize-portfolio':
+                    message = `⚖️ แผนการเพิ่มประสิทธิภาพพอร์ต:\n\n📊 การจัดสรรปัจจุบัน: หุ้น ${Math.round(data.currentAllocation?.stocks * 100) || 0}%, Crypto ${Math.round(data.currentAllocation?.crypto * 100) || 0}%\n🎯 การจัดสรรที่เหมาะสม: หุ้น ${Math.round(data.optimalAllocation?.stocks * 100) || 0}%, Crypto ${Math.round(data.optimalAllocation?.crypto * 100) || 0}%\n💰 ผลตอบแทนคาดหวัง: ${data.expectedReturn ? (data.expectedReturn * 100).toFixed(1) : 0}%\n📋 การปรับพอร์ต: ${data.rebalancingActions?.length || 0} รายการ`;
+                    break;
+
+                case 'assess-risk':
+                    message = `⚠️ การประเมินความเสี่ยง:\n\n📊 ระดับความเสี่ยง: ${data.riskLevel?.toUpperCase() || 'ไม่ระบุ'}\n📈 ความผันผวน: ${(data.riskMetrics?.volatility * 100).toFixed(1) || 0}%\n🎯 Sharpe Ratio: ${data.riskMetrics?.sharpeRatio?.toFixed(2) || 0}\n💡 คำแนะนำ: ${data.recommendations?.slice(0, 2).join(', ') || 'ไม่มีการแนะนำเฉพาะ'}`;
+                    break;
+
+                case 'investment-insights':
+                    message = `🚨 สัญญาณการลงทุน:\n\n${data.recommendations?.map(rec => `📊 ${rec.symbol}: ${rec.action} (${Math.round(rec.confidence * 100)}% confidence)`).join('\n') || 'ไม่มีสัญญาณเฉพาะ'}\n\n🎯 มุมมองตลาด: ${data.marketOutlook || 'ไม่ระบุ'}\n⚠️ ระดับความเสี่ยง: ${data.riskLevel || 'ไม่ระบุ'}`;
+                    break;
+
+                case 'generate-report':
+                    message = `📋 รายงานถูกสร้างแล้ว!\n\n📄 ประเภท: ${data.type || 'ครอบคลุม'}\n📅 สร้างเมื่อ: ${new Date(data.generatedAt).toLocaleString('th-TH')}\n📊 จำนวนส่วน: ${data.sections?.length || 0} ส่วน\n\n💾 สามารถดาวน์โหลดได้ที่: ${data.downloadUrl || 'ไม่ระบุ'}`;
+                    break;
+
+                default:
+                    message = `✅ เครื่องมือทำงานสำเร็จ!\n\nข้อมูล: ${JSON.stringify(data, null, 2)}`;
+            }
+
+            addChatMessage('ai', message);
+        }
+
+        // Send chat message
+        async function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            addChatMessage('user', message);
+            input.value = '';
+            input.style.height = 'auto';
+
+            showTyping();
+
+            // Process message with AI
+            setTimeout(async () => {
+                hideTyping();
+                await processAIMessage(message);
+            }, 1000 + Math.random() * 2000);
+        }
+
+        // Process AI message
+        async function processAIMessage(message) {
+            const lowerMessage = message.toLowerCase();
+
+            // Check for tool requests
+            for (const [toolKey, tool] of Object.entries(aiTools)) {
+                if (lowerMessage.includes(tool.name.toLowerCase()) ||
+                    lowerMessage.includes(toolKey.replace('_', ' '))) {
+                    currentTool = toolKey;
+                    await executeAITool(tool);
+                    return;
+                }
+            }
+
+            // General responses
+            if (lowerMessage.includes('สวัสดี') || lowerMessage.includes('hello')) {
+                addChatMessage('ai', '🤖 สวัสดีครับ! มีอะไรให้ผมช่วยไหมครับ?');
+            } else if (lowerMessage.includes('ช่วยเหลือ') || lowerMessage.includes('help')) {
+                addChatMessage('ai', '🛠️ เครื่องมือที่ผมมี:\n\n📊 วิเคราะห์พอร์ตการลงทุน\n📈 ข้อมูลตลาดล่าสุด\n⚖️ เพิ่มประสิทธิภาพพอร์ต\n⚠️ ประเมินความเสี่ยง\n🚨 สัญญาณการเทรด\n📋 สร้างรายงาน\n\nหรือถามคำถามทั่วไปเกี่ยวกับการลงทุนก็ได้ครับ! 💡');
+            } else if (lowerMessage.includes('ขอบคุณ') || lowerMessage.includes('thank')) {
+                addChatMessage('ai', '😊 ยินดีช่วยเหลือครับ! มีอะไรอีกไหมครับ?');
+            } else {
+                // Default response with trading context
+                addChatMessage('ai', `🤔 คำถามน่าสนใจครับ! ลองใช้เครื่องมือด้านบนหรือถามเกี่ยวกับ:\n\n💰 การลงทุน\n📊 การวิเคราะห์ตลาด\n⚠️ การจัดการความเสี่ยง\n📈 แนวโน้มราคา\n\nฉันจะช่วยวิเคราะห์และให้คำแนะนำครับ! 🚀`);
+            }
+        }
+
+        // Add chat message
+        function addChatMessage(sender, message) {
+            const messages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${sender}`;
+
+            // Format message with line breaks and emojis
+            const formattedMessage = message.replace(/\n/g, '<br>');
+            messageDiv.innerHTML = formattedMessage;
+
+            messages.appendChild(messageDiv);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        // Show typing indicator
+        function showTyping() {
+            document.getElementById('chatTyping').style.display = 'flex';
+        }
+
+        // Hide typing indicator
+        function hideTyping() {
+            document.getElementById('chatTyping').style.display = 'none';
+        }
+
+        // Show chat toggle after page load
+        setTimeout(() => {
+            document.querySelector('.chat-toggle').classList.add('visible');
+        }, 3000);
+
+        // Connect to WebSocket
+        function connectWebSocket() {
+            websocket = new WebSocket('ws://localhost:3000');
+
+            websocket.onopen = function() {
+                console.log('WebSocket connected');
+                isConnected = true;
+
+                // Subscribe to real-time updates
+                websocket.send(JSON.stringify({
+                    type: 'subscribe',
+                    channels: ['trading_data', 'investment_insights', 'system_status']
+                }));
+            };
+
+            websocket.onmessage = function(event) {
+                try {
+                    const data = JSON.parse(event.data);
+                    handleWebSocketMessage(data);
+                } catch (error) {
+                    console.error('Failed to parse WebSocket message:', error);
+                }
+            };
+
+            websocket.onclose = function() {
+                console.log('WebSocket disconnected');
+                isConnected = false;
+
+                // Reconnect after 5 seconds
+                setTimeout(connectWebSocket, 5000);
+            };
+        }
+
+        // Handle WebSocket messages
+        function handleWebSocketMessage(data) {
+            switch (data.type) {
+                case 'welcome':
+                    console.log('Connected to Ultimate MCP Platform');
+                    break;
+                case 'trading_data':
+                    updateTradingCard(data.data);
+                    break;
+                case 'investment_insights':
+                    updateInsightsCard(data.data);
+                    break;
+                case 'system_status':
+                    updateSystemStatus(data.data);
+                    break;
+                default:
+                    console.log('Received:', data);
+            }
+        }
+
+        // Load dashboard data
+        async function loadDashboardData() {
+            try {
+                const response = await fetch('/api/dashboard');
+                const result = await response.json();
+
+                if (result.success) {
+                    renderDashboard(result.data);
+                } else {
+                    showError(result.error);
+                }
+            } catch (error) {
+                console.error('Failed to load dashboard data:', error);
+                showError('Failed to load dashboard data');
+            }
+        }
+
+        // Render dashboard
+        function renderDashboard(data) {
+            const grid = document.getElementById('dashboardGrid');
+            grid.innerHTML = '';
+
+            // System Status Card
+            grid.appendChild(createSystemCard(data.system));
+
+            // Trading Data Card
+            grid.appendChild(createTradingCard(data.trading));
+
+            // Investment Insights Card
+            grid.appendChild(createInsightsCard(data.insights));
+
+            // MCP Servers Card
+            grid.appendChild(createMCPServersCard(data.mcpServers));
+        }
+
+        // Create system status card
+        function createSystemCard(system) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <div class="card-header">
+                    <span class="card-icon">🖥️</span>
+                    System Status
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value">${Math.floor(system.uptime)}</div>
+                        <div class="stat-label">Uptime (sec)</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${system.activeComponents}</div>
+                        <div class="stat-label">Active Components</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${system.websocketClients}</div>
+                        <div class="stat-label">WS Clients</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${(system.memoryUsage.heapUsed / 1024 / 1024).toFixed(1)}MB</div>
+                        <div class="stat-label">Memory Used</div>
+                    </div>
+                </div>
+                <div class="last-update">Last Update: ${new Date(system.timestamp).toLocaleTimeString()}</div>
+            `;
+            return card;
+        }
+
+        // Create trading data card
+        function createTradingCard(trading) {
+            const card = document.createElement('div');
+            card.className = 'card trading-card';
+            card.innerHTML = `
+                <div class="card-header">
+                    <span class="card-icon">📈</span>
+                    Trading Data
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value">${trading.set.symbols.length}</div>
+                        <div class="stat-label">SET Symbols</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${trading.crypto.coins.length}</div>
+                        <div class="stat-label">Crypto Coins</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${trading.forex.pairs.length}</div>
+                        <div class="stat-label">Forex Pairs</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value market-trend trend-${trading.set.marketTrend}">${trading.set.marketTrend.toUpperCase()}</div>
+                        <div class="stat-label">Market Trend</div>
+                    </div>
+                </div>
+                <div class="last-update">Last Update: ${new Date(trading.set.lastUpdate).toLocaleTimeString()}</div>
+            `;
+            return card;
+        }
+
+        // Create investment insights card
+        function createInsightsCard(insights) {
+            const card = document.createElement('div');
+            card.className = 'card ai-card';
+            card.innerHTML = `
+                <div class="card-header">
+                    <span class="card-icon">🧠</span>
+                    AI Investment Insights
+                </div>
+                <div class="recommendations-list">
+                    ${insights.recommendations.map(rec => `
+                        <div class="recommendation-item">
+                            <span class="recommendation-action ${rec.action.toLowerCase()}-action">${rec.action}</span>
+                            <strong>${rec.symbol}</strong>
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" style="width: ${rec.confidence * 100}%"></div>
+                            </div>
+                            <small>${rec.reason}</small>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value market-trend trend-${insights.marketOutlook}">${insights.marketOutlook.toUpperCase()}</div>
+                        <div class="stat-label">Market Outlook</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${insights.riskLevel.toUpperCase()}</div>
+                        <div class="stat-label">Risk Level</div>
+                    </div>
+                </div>
+                <div class="last-update">Next Update: ${new Date(insights.nextUpdate).toLocaleTimeString()}</div>
+            `;
+            return card;
+        }
+
+        // Create MCP servers card
+        function createMCPServersCard(servers) {
+            const card = document.createElement('div');
+            card.className = 'card mcp-card';
+            card.innerHTML = `
+                <div class="card-header">
+                    <span class="card-icon">🔧</span>
+                    MCP Servers Status
+                </div>
+                <div class="mcp-servers-grid">
+                    ${servers.map(server => `
+                        <div class="mcp-server-card">
+                            <div class="server-name">${server.name}</div>
+                            <div class="server-status status-${server.status}">${server.status.toUpperCase()}</div>
+                            <div class="server-version">v${server.version}</div>
+                            <div class="server-features">
+                                ${server.features.map(feature => `<span class="feature-tag">${feature}</span>`).join('')}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="last-update">Last Update: ${new Date().toLocaleTimeString()}</div>
+            `;
+            return card;
+        }
+
+        // Update functions for real-time data
+        function updateTradingCard(data) {
+            // Update trading card with new data
+            console.log('Updating trading data:', data);
+        }
+
+        function updateInsightsCard(data) {
+            // Update insights card with new data
+            console.log('Updating investment insights:', data);
+        }
+
+        function updateSystemStatus(data) {
+            // Update system status
+            console.log('Updating system status:', data);
+        }
+
+        // Utility functions
+        function refreshAllData() {
+            loadDashboardData();
+            showNotification('Data refreshed!', 'success');
+        }
+
+        function showError(message) {
+            const grid = document.getElementById('dashboardGrid');
+            grid.innerHTML = `<div class="error">❌ ${message}</div>`;
+        }
+
+        function showNotification(message, type = 'info') {
+            // Simple notification system
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        // Chart management
+        let tradingChart = null;
+
+        function initializeChart() {
+            const ctx = document.getElementById('tradingChart').getContext('2d');
+
+            tradingChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Portfolio Value',
+                        data: [],
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }, {
+                        label: 'Market Trend',
+                        data: [],
+                        borderColor: '#f59e0b',
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        tension: 0.4,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: 'white'
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChart(data) {
+            if (!tradingChart) return;
+
+            // Update chart data with new trading information
+            const now = new Date().toLocaleTimeString();
+            tradingChart.data.labels.push(now);
+            tradingChart.data.datasets[0].data.push(data.portfolioValue || 100000);
+            tradingChart.data.datasets[1].data.push(data.marketTrend || 0);
+
+            // Keep only last 20 data points
+            if (tradingChart.data.labels.length > 20) {
+                tradingChart.data.labels.shift();
+                tradingChart.data.datasets[0].data.shift();
+                tradingChart.data.datasets[1].data.shift();
+            }
+
+            tradingChart.update();
+        }
+
+        // Filter functions
+        function applyFilters() {
+            const dataType = document.getElementById('dataTypeFilter').value;
+            const timeRange = document.getElementById('timeRangeFilter').value;
+
+            console.log('Applying filters:', { dataType, timeRange });
+
+            // Filter dashboard cards based on selection
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                let shouldShow = true;
+
+                if (dataType !== 'all') {
+                    if (dataType === 'trading' && !card.classList.contains('trading-card')) shouldShow = false;
+                    if (dataType === 'insights' && !card.classList.contains('ai-card')) shouldShow = false;
+                    if (dataType === 'system' && !card.classList.contains('card')) shouldShow = false;
+                }
+
+                card.style.display = shouldShow ? 'block' : 'none';
+            });
+
+            showNotification(`Filters applied: ${dataType}, ${timeRange}`, 'success');
+        }
+
+        // Action functions
+        async function runTradingAnalysis() {
+            try {
+                const response = await fetch('/api/analyze-trading', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        portfolio: 'current',
+                        timeframe: '30d'
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    updateAnalytics(result.data);
+                    showNotification('Trading analysis completed!', 'success');
+                } else {
+                    showError('Trading analysis failed: ' + result.error);
+                }
+            } catch (error) {
+                showError('Failed to run trading analysis');
+            }
+        }
+
+        async function generateReport() {
+            try {
+                const response = await fetch('/api/generate-report', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        type: 'comprehensive',
+                        format: 'pdf'
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showNotification('Report generated successfully!', 'success');
+                    // Trigger download
+                    window.open(result.downloadUrl);
+                } else {
+                    showError('Report generation failed: ' + result.error);
+                }
+            } catch (error) {
+                showError('Failed to generate report');
+            }
+        }
+
+        async function exportData() {
+            try {
+                const response = await fetch('/api/export-data');
+                const data = await response.json();
+
+                if (data.success) {
+                    const blob = new Blob([JSON.stringify(data.data, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `mcp-platform-data-${new Date().toISOString().split('T')[0]}.json`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+
+                    showNotification('Data exported successfully!', 'success');
+                } else {
+                    showError('Export failed: ' + data.error);
+                }
+            } catch (error) {
+                showError('Failed to export data');
+            }
+        }
+
+        async function clearCache() {
+            try {
+                const response = await fetch('/api/clear-cache', { method: 'POST' });
+                const result = await response.json();
+
+                if (result.success) {
+                    showNotification('Cache cleared successfully!', 'success');
+                } else {
+                    showError('Failed to clear cache: ' + result.error);
+                }
+            } catch (error) {
+                showError('Failed to clear cache');
+            }
+        }
+
+        // Analytics update function
+        function updateAnalytics(data) {
+            document.getElementById('totalTrades').textContent = data.totalTrades || 0;
+            document.getElementById('avgReturn').textContent = (data.averageReturn || 0) + '%';
+            document.getElementById('winRate').textContent = (data.winRate || 0) + '%';
+            document.getElementById('portfolioValue').textContent = '$' + (data.portfolioValue || 0).toLocaleString();
+
+            updateChart(data);
+        }
+
+        // Enhanced dashboard initialization
+        async function initializeEnhancedDashboard() {
+            // Show enhanced features after basic dashboard loads
+            setTimeout(() => {
+                document.getElementById('filterControls').style.display = 'flex';
+                document.getElementById('analyticsSection').style.display = 'block';
+                document.getElementById('actionButtons').style.display = 'flex';
+
+                initializeChart();
+            }, 2000);
+        }
+
+        // Initialize when page loads
+        window.addEventListener('load', () => {
+            initializeDashboard();
+            initializeEnhancedDashboard();
+            initializeChatAI();
+        });

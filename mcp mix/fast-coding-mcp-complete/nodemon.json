@@ -1,0 +1,11 @@
+{
+  "watch": ["src", "*.ts", "*.js"],
+  "ext": "ts,js,json",
+  "ignore": ["dist/**/*", "node_modules/**/*", "*.test.ts", "*.spec.ts"],
+  "exec": "npx ts-node main.ts",
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "delay": 500,
+  "verbose": true
+}
